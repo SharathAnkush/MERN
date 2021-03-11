@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const crypto = require('crypto');
-const { v4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 
 const userSchema = new mongoose.Schema({
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     lastname:{
         type:String,
         maxlength:32,
-        required:true,
+        
     },
     email:{
         type:String,
@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
         unique:true
     },
     encry_password:{
-        type:String
+        type:String,
+        
     },
     salt:String,
 
@@ -35,12 +36,12 @@ const userSchema = new mongoose.Schema({
         default:[]
     }
 
-});
+},{timestamps:true});
 
 userSchema.virtual('password')
 .set(function(password){
   this._password = password
-  this.salt = v4()
+  this.salt = uuidv4();
   this.encry_password = this.securePassword(password)
 })
 .get(function(){
