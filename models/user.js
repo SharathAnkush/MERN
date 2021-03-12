@@ -21,12 +21,15 @@ const userSchema = new mongoose.Schema({
         trim:true,
         unique:true
     },
+    userinfo:{
+    type:String,
+    trim:true
+    },
     encry_password:{
         type:String,
         
     },
     salt:String,
-
     role:{
         type:Number,
         default:0
@@ -51,7 +54,7 @@ userSchema.virtual('password')
 userSchema.method = {
      
     authenticate : function(plainpassword){
-        return this.securePassword(plainpassword) === this.encry_password
+        return this.securePassword(plainpassword) === this.encry_password;
     },
 
     securePassword : function(plainpassword){
