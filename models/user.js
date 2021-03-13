@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     },
     encry_password:{
         type:String,
+        required:true
         
     },
     salt:String,
@@ -48,10 +49,10 @@ userSchema.virtual('password')
   this.encry_password = this.securePassword(password)
 })
 .get(function(){
-    return this._password
+    return this._password;
 })
 
-userSchema.method = {
+userSchema.methods = {
      
     authenticate : function(plainpassword){
         return this.securePassword(plainpassword) === this.encry_password;
@@ -61,7 +62,7 @@ userSchema.method = {
         if(!plainpassword) return "";
 
         try {
-            return crypto.createHmac('sha256', salt)
+            return crypto.createHmac('sha256',this.salt)
             .update(plainpassword)
             .digest('hex');
 
