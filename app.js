@@ -6,7 +6,8 @@ const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const app = express()
-const routerAuth = require("./routers/auth")
+const authRouter = require("./routers/auth")
+const userRouter = require("./routers/user")
 
 // DB Connect
 mongoose.connect("mongodb://localhost:27017/tshirt",{
@@ -22,7 +23,8 @@ app.use(cookieParser())
 app.use(cors())
 
 //MY Router
-app.use("/api", routerAuth)
+app.use("/api", authRouter)
+app.use("/api", userRouter)
 
 //Port
 const port = process.env.PORT || 8000
