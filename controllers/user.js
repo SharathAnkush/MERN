@@ -47,3 +47,33 @@ exports.usePurchaseList = (req,res) => {
     return res.json(oder)
 })
 }
+
+exports.pushOderInPurchaseList = (req,res,next) => {
+    let purchases = [];
+    req.body.oder.products.forEach(product => {
+        purchases.push({
+            _id : req.profile._id,
+            name: product.name,
+            description: product.description,
+            category: product.category,
+            quantity: product.quantity,
+            amount:req.body.order.amount,
+            transaction_id: req.body.order.transaction_id
+        });
+    });
+
+    //Store in DB
+    User.findByIdAndUpdate(
+        {_id: req.profile._id},
+        {$push: {purchases:purchases}},
+        {new:true},
+        (err,purchases) => {
+            if(err){
+                return res.status(400).json({
+                    error: "Unable to savr puchase List"
+                });
+            }
+            next();
+        }
+    );
+};
