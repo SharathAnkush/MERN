@@ -32,7 +32,7 @@ exports.signin = (req,res) => {
             error : errors.array()[0].msg
         })
     }
-    user.findOne({email}, (err,user) => {
+    User.findOne({email}, (err,user) => {
        if(err || !user){
             return res.status(400).json({
                 error :" USER Email does not exit "
