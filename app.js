@@ -8,6 +8,7 @@ const cors = require("cors")
 const app = express()
 const authRouter = require("./routers/auth")
 const userRouter = require("./routers/user")
+const categoryRouter = require("./routers/category")
 
 // DB Connect
 mongoose.connect("mongodb://localhost:27017/tshirt",{
@@ -25,6 +26,7 @@ app.use(cors())
 //MY Router
 app.use("/api", authRouter)
 app.use("/api", userRouter)
+app.use("/api",categoryRouter)
 
 //Port
 const port = process.env.PORT || 8000
