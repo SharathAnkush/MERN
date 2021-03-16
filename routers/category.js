@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const {getCategoryById, createCategory, getCategory, getAllCategory,updateCategory} = require("../controllers/category")
+const {getCategoryById, createCategory, getCategory, getAllCategory,updateCategory,removeCategory} = require("../controllers/category")
 const {isSignedIn, isAuthenticate, isAdmin} = require("../controllers/auth")
 const {getUserById} = require("../controllers/user")
 
@@ -16,6 +16,9 @@ router.get("/categories", getAllCategory)
 
 //Update
 router.put("/category/:categoryId/:userId", isSignedIn, isAuthenticate, isAdmin, updateCategory )
+
+//Delete
+router.put("/category/:categoryId/:userId", isSignedIn, isAuthenticate, isAdmin, removeCategory )
 
 
 module.exports = router;
