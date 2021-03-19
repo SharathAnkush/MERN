@@ -87,7 +87,6 @@ exports.deleteProduct = (req,res) => {
     })
 }
 
-
 exports.updateProduct = (req,res) => {
     const form = formidable.IncomingForm();
     form.keepExtensions = true;
@@ -129,7 +128,7 @@ exports.updateProduct = (req,res) => {
 exports.getAllProduct = (req,res) => {
     let limit = res.query.limit ? parseInt(res.query.limit) : 8;
     let sortBy = req.query.sortBy ? req.query.sortBy : "_id";
-    
+
     Product.find()
     .select("-photo")
     .populate("category")
@@ -142,5 +141,36 @@ exports.getAllProduct = (req,res) => {
             })
         }
         res.json(products);
+    })
+}
+
+exports.updateStock = (req,res,next) => {
+    let myOperation = req.body.order.product.map( prod => {
+        return {
+            updateOne : {
+                filter: { _id: prod._id },
+                update: {$inc: {stock: -prod.count, sold: +prod.count}}
+            }
+        };
+    });
+
+    Product.bulkWrite(myOperation, {}, (err,product) => {
+        if(err){
+            return res.status(400).json({
+                error: "Bulk operation failed"
+            })
+        }
+        next();
+    });
+};
+
+exports.getAllUniqueCategories = (req,res) => {
+    Product.distinct("category", {}, (err,category) => {
+        if(err){
+            return res.status(400).json({
+                error: "No category found"
+            })
+        }
+        res.json(category)
     })
 }
