@@ -2,6 +2,7 @@ const Product = require("../models/product")
 const formidable = require("formidable")
 const _ = require("lodash")
 const fs = require("fs");
+const product = require("../models/product");
 
 exports.getProductById = (req,res,next,id) => {
     Product.findById(id).exec((err,product) => {
@@ -71,4 +72,57 @@ exports.photo = (req,res,next) => {
         return res.send(req.product.photo.data)
     }
     next();
+}
+
+exports.deleteProduct = (req,res) => {
+    let product = req.product;
+    product.remove((err, deleteProduct) => {
+        if(err){
+            return res.status(400).json({
+                error:"failed to delete the product"
+            })
+        }
+        res.json({
+            message:"deletion is success",deleteProduct
+        })
+    })
+}
+
+
+exports.updateProduct = (req,res) => {
+    const form = formidable.IncomingForm();
+    form.keepExtensions = true;
+
+    form.parse(req, (err, fields, file) => {
+        if(err){
+            return res.status(400).json({
+                error: "problem with image"
+            })
+        }
+
+        // update product
+        let product = req.product;
+        product = _.extend(product,fields)
+
+        // handel file 
+        if(file.photo){
+            if(file.photo.size > 3000000){
+                return res.status(400).json({
+                    error : "file size too big"
+                })
+            }
+            product.photo.data = fs.readFileSync(file.photo.path);
+            product.photo.contentType = file.photo.type ;
+        }
+
+        //save to the DB
+        product.save((err,product) => {
+            if(err){
+                return res.status(400).json({
+                    error: "saving tshirt in db failed"
+                })
+            }
+            res.json(product);
+        })
+    })
 }
