@@ -2,7 +2,6 @@ const Product = require("../models/product")
 const formidable = require("formidable")
 const _ = require("lodash")
 const fs = require("fs");
-const product = require("../models/product");
 
 exports.getProductById = (req,res,next,id) => {
     Product.findById(id).exec((err,product) => {
@@ -36,7 +35,7 @@ exports.createProduct = (req,res) => {
             })
         }
 
-        const product = new Product(fields)
+        let product = new Product(fields)
 
         // handel file 
         if(file.photo){
