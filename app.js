@@ -10,6 +10,7 @@ const authRouter = require("./routers/auth")
 const userRouter = require("./routers/user")
 const categoryRouter = require("./routers/category")
 const productRouter = require("./routers/product")
+const orderRouter = require("./routers/order")
 
 // DB Connect
 mongoose.connect("mongodb://localhost:27017/tshirt",{
@@ -29,6 +30,7 @@ app.use("/api", authRouter)
 app.use("/api", userRouter)
 app.use("/api",categoryRouter)
 app.use("/api",productRouter)
+app.use("/api", orderRouter)
 
 //Port
 const port = process.env.PORT || 8000
