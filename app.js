@@ -21,7 +21,10 @@ mongoose.connect("mongodb://localhost:27017/tshirt",{
 }).then(() => console.log("DB CONNECTED"))
 
 // MiddleWares
-app.use(bodyParser.json())
+app.use(express.urlencoded({extended:true}))
+app.use(express.json())
+//app.use(bodyParser.json())
+//app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(cors())
 
@@ -33,7 +36,7 @@ app.use("/api",productRouter)
 app.use("/api", orderRouter)
 
 //Port
-const port = process.env.PORT || 8000
+const port = 8000 //process.env.PORT || 8000
 
 //Starting Server
 app.listen(port,() => {console.log(`app is rurring on ${port}`)})
